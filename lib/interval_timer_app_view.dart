@@ -27,8 +27,7 @@ class IntervalTimerAppView extends StatelessWidget {
           supportedLocales: S.delegate.supportedLocales,
           title: 'Flutter Demo',
           home: const SafeArea(
-            child: AppPageView(
-            ),
+            child: AppPageView(),
           ),
         );
       },

@@ -12,7 +12,7 @@ class QuickStartBar extends StatefulWidget {
 class _QuickStartBarState extends State<QuickStartBar>
     with SingleTickerProviderStateMixin {
   bool isOpen = false;
-  int duration = 400;
+  int duration = 600;
   late AnimationController _rotationController;
 
   @override
@@ -69,12 +69,15 @@ class _QuickStartBarState extends State<QuickStartBar>
                 ),
               ),
             ),
-            AnimatedContainer(
-              color: Colors.amberAccent,
-              height: isOpen ? 400 : 0,
-              duration: Duration(milliseconds: duration),
-              curve: Curves.linear,
-              child: SingleChildScrollView(
+            SizeTransition(
+              sizeFactor: CurvedAnimation(
+                parent: _rotationController,
+                curve: Curves.ease,
+              ),
+              axis: Axis.vertical,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                color: Colors.amberAccent,
                 child: Column(
                   children: [
                     Container(

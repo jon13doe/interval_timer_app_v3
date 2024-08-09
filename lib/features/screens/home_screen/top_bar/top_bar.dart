@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:interval_timer_app_v3/features/blocks/app_page_view_cubit.dart';
 import 'package:interval_timer_app_v3/features/widgets/index.dart';
 import 'package:interval_timer_app_v3/theme/sizes.dart';
 
@@ -24,7 +27,7 @@ class _TopBarState extends State<TopBar> {
             icon: const Icon(Icons.settings),
             iconSize: medium.iconSize,
             onPressed: () {
-              // go to menu
+              context.read<PageCubit>().changePage(0);
             },
           ),
           Visibility(
