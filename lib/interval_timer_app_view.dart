@@ -7,16 +7,20 @@ import 'generated/l10n.dart';
 import 'theme/theme.dart';
 
 class IntervalTimerAppView extends StatelessWidget {
-  const IntervalTimerAppView({super.key});
+  final AdaptiveThemeMode? savedThemeMode;
+
+  const IntervalTimerAppView({super.key, this.savedThemeMode});
 
   @override
   Widget build(BuildContext context) {
     return AdaptiveTheme(
       light: customLightTheme,
-      dark: ThemeData(),
-      initial: AdaptiveThemeMode.light,
-      builder: (theme, light) {
+      dark: customDarkTheme,
+      initial: savedThemeMode ?? AdaptiveThemeMode.light,
+      builder: (theme, darkTheme) {
         return MaterialApp(
+          theme: theme,
+          darkTheme: darkTheme,
           debugShowCheckedModeBanner: false,
           localizationsDelegates: const [
             S.delegate,
@@ -25,7 +29,6 @@ class IntervalTimerAppView extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: S.delegate.supportedLocales,
-          title: 'Flutter Demo',
           home: const SafeArea(
             child: AppPageView(),
           ),

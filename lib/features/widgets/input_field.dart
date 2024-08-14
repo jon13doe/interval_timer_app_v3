@@ -32,7 +32,7 @@ class _InputFieldState extends State<InputField> {
       width: widget.numImput == false
           ? 0.5 * MediaQuery.of(context).size.width
           : 1.25 * widget.fontSize,
-      height: 1.2 * widget.fontSize,
+      height: 1.5 * widget.fontSize,
       decoration: BoxDecoration(
         color: Colors.amber,
         borderRadius: BorderRadius.circular(5),
@@ -95,7 +95,7 @@ class _InputFieldState extends State<InputField> {
               child: Text(
                 widget.descriptionText!,
                 style: TextStyle(
-                  fontSize: 0.2 * widget.fontSize,
+                  fontSize: 0.35 * widget.fontSize,
                   fontWeight: FontWeight.w600,
                 ),
               ),

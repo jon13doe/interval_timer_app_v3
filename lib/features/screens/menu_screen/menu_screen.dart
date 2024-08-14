@@ -1,8 +1,12 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:interval_timer_app_v3/features/app_settings/index.dart';
 import 'package:interval_timer_app_v3/features/blocks/app_page_view_cubit.dart';
 import 'package:interval_timer_app_v3/features/data/strings.dart';
+import 'package:interval_timer_app_v3/features/widgets/dynm_icon_button.dart';
 import 'package:interval_timer_app_v3/theme/sizes.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -11,12 +15,27 @@ class MenuScreen extends StatefulWidget {
   State<MenuScreen> createState() => _HomeScreenState();
 }
 
+String themeColors({required int currentTheme}) {
+  switch (currentTheme) {
+    case 1:
+      return 'system';
+    case 2:
+      return 'light';
+    default:
+      return 'dark';
+  }
+}
+
 class _HomeScreenState extends State<MenuScreen> with TickerProviderStateMixin {
   bool isOpenSoundMenu = false;
   bool isOpenColorsMenu = false;
   bool sipLastRest = true;
 
   int duration = 600;
+
+  late AppSettings settings;
+  late int curentSettings;
+
   late AnimationController _rotationControllerSounds;
   late AnimationController _rotationControllerColors;
 
@@ -31,6 +50,13 @@ class _HomeScreenState extends State<MenuScreen> with TickerProviderStateMixin {
       vsync: this,
     );
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    settings = SettingsProvider.of(context)!;
+    curentSettings = settings.appTheme;
   }
 
   @override
@@ -69,6 +95,36 @@ class _HomeScreenState extends State<MenuScreen> with TickerProviderStateMixin {
               padding: EdgeInsets.all(medium.padding),
               child: CustomScrollView(
                 slivers: [
+                  SliverToBoxAdapter(
+                    child: Row(
+                      children: [
+                        DynamicIconButton(
+                          iconsList: const [
+                            Icons.light_mode,
+                            Icons.dark_mode,
+                            Symbols.settings_night_sight,
+                          ],
+                          initState: curentSettings,
+                          iconSize: 32,
+                          onStateChange: (index) {
+                            setState(() {
+                              settings.switchAppTheme(index);
+                              curentSettings = settings.appTheme;
+                              if (index == 0) {
+                                AdaptiveTheme.of(context).setLight();
+                              } else if (index == 1) {
+                                AdaptiveTheme.of(context).setDark();
+                              } else if (index == 2) {
+                                AdaptiveTheme.of(context).setSystem();
+                              }
+                            });
+                          },
+                        ),
+                        Text(
+                            'Switch to ${themeColors(currentTheme: curentSettings)} theme colors'),
+                      ],
+                    ),
+                  ),
                   SliverToBoxAdapter(
                     child: Column(
                       children: [

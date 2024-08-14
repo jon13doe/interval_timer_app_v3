@@ -85,7 +85,7 @@ class _QuickStartBarState extends State<QuickStartBar>
                       height: medium.padding,
                     ),
                     const Text(
-                      'sets',
+                      'Sets',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
