@@ -8,6 +8,8 @@ import 'package:interval_timer_app_v3/features/widgets/dynm_icon_button.dart';
 import 'package:interval_timer_app_v3/theme/sizes.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import 'elements/index.dart';
+
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
 
@@ -18,11 +20,11 @@ class MenuScreen extends StatefulWidget {
 String themeColors({required int currentTheme}) {
   switch (currentTheme) {
     case 1:
-      return 'system';
+      return 'Dark';
     case 2:
-      return 'light';
+      return 'System';
     default:
-      return 'dark';
+      return 'Light';
   }
 }
 
@@ -68,23 +70,30 @@ class _HomeScreenState extends State<MenuScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final double rightElementWidth = 0.2 * MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Column(
         children: [
           Container(
             height: kToolbarHeight,
             width: MediaQuery.of(context).size.width,
-            color: Colors.amber,
+            color: theme.appBarTheme.backgroundColor,
+            padding: EdgeInsets.symmetric(horizontal: medium.padding),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Menu'),
-                IconButton(
-                  onPressed: () {
-                    context.read<PageCubit>().changePage(1);
-                  },
-                  icon: const Icon(
-                    Icons.keyboard_arrow_right,
+                SizedBox(
+                  width: rightElementWidth,
+                  child: IconButton(
+                    onPressed: () {
+                      context.read<PageCubit>().changePage(1);
+                    },
+                    icon: const Icon(
+                      Icons.keyboard_arrow_right,
+                    ),
                   ),
                 ),
               ],
@@ -95,36 +104,6 @@ class _HomeScreenState extends State<MenuScreen> with TickerProviderStateMixin {
               padding: EdgeInsets.all(medium.padding),
               child: CustomScrollView(
                 slivers: [
-                  SliverToBoxAdapter(
-                    child: Row(
-                      children: [
-                        DynamicIconButton(
-                          iconsList: const [
-                            Icons.light_mode,
-                            Icons.dark_mode,
-                            Symbols.settings_night_sight,
-                          ],
-                          initState: curentSettings,
-                          iconSize: 32,
-                          onStateChange: (index) {
-                            setState(() {
-                              settings.switchAppTheme(index);
-                              curentSettings = settings.appTheme;
-                              if (index == 0) {
-                                AdaptiveTheme.of(context).setLight();
-                              } else if (index == 1) {
-                                AdaptiveTheme.of(context).setDark();
-                              } else if (index == 2) {
-                                AdaptiveTheme.of(context).setSystem();
-                              }
-                            });
-                          },
-                        ),
-                        Text(
-                            'Switch to ${themeColors(currentTheme: curentSettings)} theme colors'),
-                      ],
-                    ),
-                  ),
                   SliverToBoxAdapter(
                     child: Column(
                       children: [
@@ -145,143 +124,28 @@ class _HomeScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                           },
                           child: Container(
                             color: Colors.pinkAccent,
-                            height: kToolbarHeight,
+                            height: 0.8 * kToolbarHeight,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text('Sounds'),
-                                RotationTransition(
-                                  turns: Tween(begin: 1.0, end: 0.5)
-                                      .animate(_rotationControllerSounds),
-                                  child: const Icon(
-                                    Icons.keyboard_arrow_down,
+                                SizedBox(
+                                  width: rightElementWidth,
+                                  child: RotationTransition(
+                                    turns: Tween(begin: 1.0, end: 0.5)
+                                        .animate(_rotationControllerSounds),
+                                    child: const Icon(
+                                      Icons.keyboard_arrow_down,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        Container(
-                          color: Colors.green,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('Theme'),
-                              TextButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      bool selectedValue = false;
-                                      return Dialog(
-                                        insetPadding: const EdgeInsets.all(50),
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(0)),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const Row(
-                                                children: [
-                                                  Text(
-                                                    'Sound Themes',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Expanded(
-                                                child: CustomScrollView(
-                                                  slivers: [
-                                                    SliverList(
-                                                      delegate:
-                                                          SliverChildBuilderDelegate(
-                                                              childCount: 3,
-                                                              (context, index) {
-                                                        return Container(
-                                                          color:
-                                                              Colors.blue[50],
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  vertical: 5),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Text(
-                                                                'Theme ${(index + 1).toString()}',
-                                                              ),
-                                                              Radio(
-                                                                value: 1,
-                                                                groupValue:
-                                                                    selectedValue,
-                                                                onChanged:
-                                                                    (value) {
-                                                                  setState(() {
-                                                                    selectedValue =
-                                                                        !selectedValue;
-                                                                  });
-                                                                },
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                      }),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(height: 20),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: const Text('Try'),
-                                                  ),
-                                                  const Expanded(
-                                                    child: SizedBox(),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: const Text('Cancel'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: const Text('OK'),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                                child: const Text('Beep'),
-                              ),
-                            ],
-                          ),
+                        MenuRow(
+                          title: 'Sound theme',
+                          listElements: soundThemes,
                         ),
                         SizeTransition(
                           sizeFactor: CurvedAnimation(
@@ -289,30 +153,16 @@ class _HomeScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                             curve: Curves.ease,
                           ),
                           axis: Axis.vertical,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.amberAccent,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: phaseString.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  color: Colors.blue,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(phaseString[index]),
-                                      TextButton(
-                                        onPressed: () {},
-                                        child: Text('Beep $index'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: phaseString.length,
+                            itemBuilder: (context, index) {
+                              return MenuRow(
+                                title: phaseString[index],
+                                listElements: soundList,
+                              );
+                            },
                           ),
                         ),
                       ],
@@ -338,34 +188,66 @@ class _HomeScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                           },
                           child: Container(
                             color: Colors.pinkAccent,
-                            height: kToolbarHeight,
+                            height: 0.8 * kToolbarHeight,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text('Colors'),
-                                RotationTransition(
-                                  turns: Tween(begin: 1.0, end: 0.5)
-                                      .animate(_rotationControllerColors),
-                                  child: const Icon(
-                                    Icons.keyboard_arrow_down,
+                                SizedBox(
+                                  width: rightElementWidth,
+                                  child: RotationTransition(
+                                    turns: Tween(begin: 1.0, end: 0.5)
+                                        .animate(_rotationControllerColors),
+                                    child: const Icon(
+                                      Icons.keyboard_arrow_down,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        Container(
-                          color: Colors.green,
+                        SizedBox(
+                          height: 0.8 * kToolbarHeight,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('Theme'),
-                              TextButton(
-                                onPressed: () {},
-                                child: const Text('color'),
+                              const Text('Main theme'),
+                              Row(
+                                children: [
+                                  Text(
+                                    themeColors(currentTheme: curentSettings),
+                                  ),
+                                  DynamicIconButton(
+                                    iconsList: const [
+                                      Icons.light_mode,
+                                      Icons.dark_mode,
+                                      Symbols.settings_night_sight,
+                                    ],
+                                    initState: curentSettings,
+                                    iconSize: 32,
+                                    onStateChange: (index) {
+                                      setState(() {
+                                        settings.switchAppTheme(index);
+                                        curentSettings = settings.appTheme;
+                                        if (index == 0) {
+                                          AdaptiveTheme.of(context).setLight();
+                                        } else if (index == 1) {
+                                          AdaptiveTheme.of(context).setDark();
+                                        } else if (index == 2) {
+                                          AdaptiveTheme.of(context).setSystem();
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ],
                               ),
                             ],
                           ),
+                        ),
+                        MenuRow(
+                          title: 'Timer theme',
+                          listElements: timersThemes,
                         ),
                         SizeTransition(
                           sizeFactor: CurvedAnimation(
@@ -373,30 +255,16 @@ class _HomeScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                             curve: Curves.ease,
                           ),
                           axis: Axis.vertical,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.amberAccent,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: phaseString.length - 1,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  color: Colors.blue,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(phaseString[index + 1]),
-                                      TextButton(
-                                        onPressed: () {},
-                                        child: Text('Beep $index + 1'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: phaseString.length - 1,
+                            itemBuilder: (context, index) {
+                              return MenuRow(
+                                title: phaseString[index + 1],
+                                listElements: colorsList,
+                              );
+                            },
                           ),
                         ),
                       ],
@@ -407,7 +275,7 @@ class _HomeScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                       children: [
                         Container(
                           color: Colors.pinkAccent,
-                          height: kToolbarHeight,
+                          height: 0.8 * kToolbarHeight,
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -415,25 +283,31 @@ class _HomeScreenState extends State<MenuScreen> with TickerProviderStateMixin {
                             ],
                           ),
                         ),
-                        Container(
-                          color: Colors.green,
+                        SizedBox(
+                          height: 0.8 * kToolbarHeight,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text('Skip last rest'),
-                              Switch(
-                                  value: sipLastRest,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      sipLastRest = newValue;
-                                    });
-                                  }),
+                              SizedBox(
+                                width: rightElementWidth,
+                                child: Transform.scale(
+                                  scale: 0.75,
+                                  child: Switch(
+                                      value: sipLastRest,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          sipLastRest = newValue;
+                                        });
+                                      }),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        Container(
-                          color: Colors.green,
-                          child: const Row(
+                        const SizedBox(
+                          height: 0.8 * kToolbarHeight,
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('Final count'),
